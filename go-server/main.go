@@ -10,9 +10,9 @@
 package main
 
 import (
+	"example.com/m/go"
 	"log"
 	"net/http"
-
 	// WARNING!
 	// Change this to a fully-qualified import path
 	// once you place this file into your project.
@@ -20,13 +20,12 @@ import (
 	//
 	//    sw "github.com/myname/myrepo/go"
 	//
-	sw "./go"
 )
 
 func main() {
 	log.Printf("Server started")
 
-	router := sw.NewRouter()
+	router := _go.NewRouter()
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
