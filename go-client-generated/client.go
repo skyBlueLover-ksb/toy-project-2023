@@ -160,7 +160,9 @@ func parameterToString(obj interface{}, collectionFormat string) string {
 // callAPI do the request.
 func (c *APIClient) callAPI(request *http.Request) (*http.Response, error) {
 	return c.cfg.HTTPClient.Do(request)
-}
+}//http request를 요청하고 http response를 반환받는 http request 의 method
+//
+
 
 // Change base path to allow switching to mocks
 func (c *APIClient) ChangeBasePath(path string) {

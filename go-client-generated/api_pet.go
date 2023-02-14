@@ -84,6 +84,7 @@ func (a *PetApiService) UpdatePet(ctx context.Context, body Pet) (Pet, *http.Res
 
 
 	// create path and map variables
+	//Replace(대상 문자열, 검색 문자, 치환 문자, 횟수)
 	localVarPath := a.client.cfg.BasePath + "/pet"
 	
 	//a.client.cfg.basepath = https://petstore3.swagger.io/api/v3
@@ -145,8 +146,8 @@ func (a *PetApiService) UpdatePet(ctx context.Context, body Pet) (Pet, *http.Res
 	localVarHttpResponse, err := a.client.callAPI(r)  
 
 
-		//client 는 client.go 의 api client 객체에 해당하네
-		//그럼 a는 client의 service 객체에 해당하겠네!!
+	//client 는 client.go 의 api client 객체에 해당하네
+	//그럼 a는 client의 service 객체에 해당하겠네!!
 
 
 														//request *http.Request 객체 받아서 net/http의 do method로 http request를 보냄
@@ -216,4 +217,6 @@ func (a *PetApiService) UpdatePet(ctx context.Context, body Pet) (Pet, *http.Res
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
+	//이 코드는 실행될려면 300미만으로 가서 에러 있는경우, 300이상으로 가서 는 여기 올일이 없는데..
+	//로직이 조금 이상함 수정해야 되는거 아닌가..?
 }
