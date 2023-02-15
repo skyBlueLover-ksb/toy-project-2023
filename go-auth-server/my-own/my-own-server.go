@@ -1,8 +1,18 @@
 package my_own
 
 import (
+	"github.com/go-oauth2/oauth2/v4/generates"
 	"github.com/go-oauth2/oauth2/v4/manage"
+	"github.com/go-oauth2/oauth2/v4/models"
+	"github.com/go-oauth2/oauth2/v4/store"
 	"time"
+)
+
+var (
+	idVar       string
+	secretVar   string
+	redirectVar string
+	portVar     int
 )
 
 func main() {
@@ -38,4 +48,15 @@ func main() {
 	manager.SetClientTokenCfg(clientTokenConfig)
 	manager.SetRefreshTokenCfg(refreshTokenConfig)
 
+	manager.MapAuthorizeGenerate(generates.NewAuthorizeGenerate())
+	manager.MapAccessGenerate(generates.NewAccessGenerate())
+
+	manager.MustTokenStorage(store.NewMemoryTokenStore())
+	clientStore := store.NewClientStore()
+	clientStore.Set(idVar, &models.Client{
+		ID:     idVar,
+		Secret: secretVar,
+		Domain: redirectVar,
+	})
+	manager.MapClientStorage(clientStore)
 }
