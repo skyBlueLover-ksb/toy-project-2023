@@ -3,18 +3,19 @@ package main
 import (
 	"context"
 	"flag"
-	"github.com/go-oauth2/oauth2/v4/generates"
-	"github.com/go-session/session"
+
 	"io"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/go-oauth2/oauth2/v4/errors"
+	"github.com/go-oauth2/oauth2/v4/generates"
 	"github.com/go-oauth2/oauth2/v4/manage"
 	"github.com/go-oauth2/oauth2/v4/models"
 	"github.com/go-oauth2/oauth2/v4/server"
 	"github.com/go-oauth2/oauth2/v4/store"
+	"github.com/go-session/session"
 )
 
 var (
@@ -57,7 +58,6 @@ func main() {
 	// generate jwt access token by uuid
 	// accessToken, refreshToken, err will be returned
 	manager.MapAccessGenerate(generates.NewAccessGenerate())
-
 	//// generate JWT access token with keyId, key, Method
 	//manager.MapAccessGenerate(generates.NewJWTAccessGenerate("", []byte("00000000"), jwt.SigningMethodHS512))
 
