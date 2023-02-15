@@ -1,9 +1,11 @@
 package my_own
 
 import (
+	"github.com/go-oauth2/oauth2/v4"
 	"github.com/go-oauth2/oauth2/v4/generates"
 	"github.com/go-oauth2/oauth2/v4/manage"
 	"github.com/go-oauth2/oauth2/v4/models"
+	"github.com/go-oauth2/oauth2/v4/server"
 	"github.com/go-oauth2/oauth2/v4/store"
 	"time"
 )
@@ -59,4 +61,20 @@ func main() {
 		Domain: redirectVar,
 	})
 	manager.MapClientStorage(clientStore)
+
+	srv := server.NewServer(server.NewConfig(), manager)
+
+	srv.SetAllowedResponseType(
+		oauth2.Code,
+		oauth2.Token,
+	)
+
+	srv.SetAllowedGrantType(
+		oauth2.AuthorizationCode,
+		oauth2.PasswordCredentials,
+		oauth2.ClientCredentials,
+		oauth2.Implicit,
+		oauth2.Refreshing,
+	)
+
 }
