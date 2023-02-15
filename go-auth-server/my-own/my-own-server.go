@@ -2,6 +2,9 @@ package my_own
 
 import (
 	"context"
+	"net/http"
+	"time"
+
 	"github.com/go-oauth2/oauth2/v4"
 	"github.com/go-oauth2/oauth2/v4/errors"
 	"github.com/go-oauth2/oauth2/v4/generates"
@@ -9,8 +12,6 @@ import (
 	"github.com/go-oauth2/oauth2/v4/models"
 	"github.com/go-oauth2/oauth2/v4/server"
 	"github.com/go-oauth2/oauth2/v4/store"
-	"net/http"
-	"time"
 )
 
 var (
@@ -88,7 +89,7 @@ func main() {
 	srv.SetPasswordAuthorizationHandler(myPasswordAuthorizationHandler)
 
 	srv.SetRefreshingScopeHandler(myRefreshingScopeHandler)
-	srv.SetRefreshingValidationHandler(myValidateURIHandler)
+	srv.SetRefreshingValidationHandler(myRefreshingValidationHandler)
 
 	srv.SetResponseTokenHandler(myResponseTokenHandler)
 	srv.SetResponseErrorHandler(myResponseErrorHandler)
@@ -103,6 +104,7 @@ func main() {
 
 func myClientInfoHandler(r *http.Request) (clientID, clientSecret string, err error) {
 	return server.ClientBasicHandler(r)
+	//return server.ClientFormHandler(r)
 }
 
 func myClientAuthorizedHandler(clientID string, grant oauth2.GrantType) (allowed bool, err error) {
@@ -125,7 +127,7 @@ func myRefreshingScopeHandler(tgr *oauth2.TokenGenerateRequest, scope string) (a
 	return
 }
 
-func myValidateURIHandler(ti oauth2.TokenInfo) (allowed bool, err error) {
+func myRefreshingValidationHandler(ti oauth2.TokenInfo) (allowed bool, err error) {
 	return
 }
 
