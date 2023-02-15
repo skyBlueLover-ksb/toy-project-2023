@@ -82,7 +82,21 @@ func main() {
 	)
 
 	srv.SetClientInfoHandler(myClientInfoHandler)
-	srv.SetClientAuthorizedHandler(myClientAuthorizedHandler)
+	//srv.SetClientAuthorizedHandler(myClientAuthorizedHandler)
+	srv.SetClientAuthorizedHandler(
+		func(clientID string, grant oauth2.GrantType) (allowed bool, err error) {
+			allowed = false
+			err = errors.New("No authorization code grant!")
+			if grant == oauth2.AuthorizationCode {
+				clientInfo, _ := clientStore.GetByID(context.Background(), clientID)
+				if clientInfo != nil {
+					allowed = true
+				}
+				err = nil
+			}
+			return allowed, err
+		},
+	)
 	srv.SetClientScopeHandler(myClientScopeHandler)
 
 	srv.SetUserAuthorizationHandler(myUserAuthorizationHandler)
@@ -101,15 +115,14 @@ func main() {
 }
 
 // TODO: implement handlers...
-
 func myClientInfoHandler(r *http.Request) (clientID, clientSecret string, err error) {
 	return server.ClientBasicHandler(r)
 	//return server.ClientFormHandler(r)
 }
 
-func myClientAuthorizedHandler(clientID string, grant oauth2.GrantType) (allowed bool, err error) {
-	return
-}
+//func myClientAuthorizedHandler(clientID string, grant oauth2.GrantType) (allowed bool, err error) {
+//	return
+//}
 
 func myClientScopeHandler(tgr *oauth2.TokenGenerateRequest) (allowed bool, err error) {
 	return
