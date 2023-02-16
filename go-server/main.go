@@ -10,7 +10,7 @@
 package main
 
 import (
-	"example.com/m/go"
+	sw "example.com/m/go"
 	"log"
 	"net/http"
 	// WARNING!
@@ -25,7 +25,7 @@ import (
 func main() {
 	log.Printf("Server started")
 
-	router := _go.NewRouter()
+	router := sw.NewRouter()
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 }

@@ -20,6 +20,7 @@ const (
 )
 
 var (
+	//
 	config = oauth2.Config{
 		ClientID:     "222222",
 		ClientSecret: "22222222",
