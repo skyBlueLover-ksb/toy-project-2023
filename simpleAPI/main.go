@@ -6,5 +6,6 @@ import (
 )
 
 func main() {
-	http.ListenAndServe(":80", myapp.NewHandler())
+	http.ListenAndServe(":3000", myapp.NewHandler())
+
 }
