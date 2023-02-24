@@ -1,12 +1,11 @@
 package myapp
 
 import (
+	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestCreateUser(t *testing.T) {
@@ -20,4 +19,5 @@ func TestCreateUser(t *testing.T) {
 
 	assert.NoError(err)
 	assert.Equal(http.StatusCreated, resp.StatusCode)
+
 }
