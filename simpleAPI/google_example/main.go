@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"golang.org/x/oauth2"
@@ -18,11 +19,23 @@ const (
 	basePORT = "8080"
 )
 
+type myUser struct {
+	Email string
+	Name  string
+}
+
 func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", RenderMainViewHandler)
 	r.HandleFunc("/auth", RenderAuthViewHandler)
 	r.HandleFunc("/auth/callback", AuthenticateHandler)
+	r.HandleFunc("/view", func(w http.ResponseWriter, r *http.Request) {
+		session, _ := store.Get(r, "session")
+		email, _ := session.Values["user"].(string)
+		name, _ := session.Values["username"].(string)
+		user := &myUser{email, name}
+		RenderTemplate(w, "view.html", user)
+	})
 
 	srv := &http.Server{
 		Handler: r,
@@ -66,6 +79,7 @@ func AuthenticateHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	token, err := OAuthConfig.Exchange(oauth2.NoContext, r.FormValue("code"))
+	fmt.Println(token)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -95,5 +109,5 @@ func AuthenticateHandler(w http.ResponseWriter, r *http.Request) {
 	session.Values["username"] = authUser.Name
 	session.Save(r, w)
 
-	http.Redirect(w, r, "/", http.StatusFound)
+	http.Redirect(w, r, "/view", http.StatusFound)
 }
