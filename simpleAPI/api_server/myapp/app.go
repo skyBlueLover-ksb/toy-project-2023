@@ -30,7 +30,11 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func usersHandler(w http.ResponseWriter, r *http.Request) {
-
+	if len(userMap) == 0 {
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, "No Users")
+		return
+	}
 	fmt.Fprint(w, "Get UserInfo by /users/{id}")
 }
 
@@ -125,6 +129,7 @@ func NewHandler() http.Handler {
 	lastID = 0
 
 	myMux := mux.NewRouter().StrictSlash(true)
+	myMux.Use(Logger)
 
 	myMux.HandleFunc("/", indexHandler)
 	myMux.HandleFunc("/users", usersHandler).Methods("GET")
