@@ -10,72 +10,103 @@
 package swagger
 
 import (
-	cli "bgg01578/serverPrac/go-client-generated"
-	"context"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 
-	"encoding/json"
-
-	"github.com/antihax/optional"
+	"github.com/gorilla/mux"
 )
 
+var pets map[int64]Pet
 func AddPet(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	fmt.Fprintf(w, "Hello World! add111")
-	w.WriteHeader(http.StatusOK)
+
+
+	data,err := ioutil.ReadAll(r.Body)
+	if(err!=nil){
+		log.Print(err.Error())
+		return
+	}
+
+	var newpet Pet 
+	err = json.Unmarshal(data,&newpet)
+	if err!=nil {
+		log.Print(err.Error())
+		return
+	}
+
+	if err!=nil || newpet.Id==0 || newpet.Category.Id==0 {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(w, err)
+		//log.Print(err.Error())
+		return
+	}
+
+	_,ok := pets[newpet.Id]
+	if ok {
+		w.WriteHeader(http.StatusBadRequest)
+		//fmt.Fprint(w,"pet already exist")
+		return
+	}
+	pets[newpet.Id] = newpet
+	//pets = append(pets, newpet)
+
+	fmt.Fprint(w, string(data))
+	w.WriteHeader(http.StatusCreated)
 }
+
 func DeletePet(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	fmt.Fprintf(w, "Hello World! delete")
-	w.WriteHeader(http.StatusOK)
+
+	vars := mux.Vars(r) // HTTP요청의 url 경로에서 변수 추출에 사용
+	petId, err := strconv.Atoi(vars["petId"]) // 문자열과 기본 자료형간의 형변환 패키지
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(w, err)
+		return
+	}
+
+	for i,v := range pets{
+		if v.Id == int64(petId){
+			delete(pets,i)
+			//pets = append(pets[:i], pets[i+1:]...)
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+	}
+
+	
+	w.WriteHeader(http.StatusBadRequest)
+	// data, _ := json.Marshal(pet)
+	// fmt.Fprint(w, string(data))
 }
 
 func FindPetsByStatus(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	client := cli.NewAPIClient(cli.NewConfiguration())
-	//client.FindPetsByStatus{nil,{Status:"available"}}
 
 	values := r.URL.Query()
-	//log.Print(values)
-    status := values.Get("status")
-	//log.Print(status)
-	// u, _ := url.ParseRequestURI(r.URL.Query)
-	// q := u.Query()
-	// fmt.Println(q.Get("status")) // "pending"
+	status := values.Get("status")
+	//api_key := r.Header.Get("Api_key")
 
-	pets, _, err := client.PetApi.FindPetsByStatus(context.Background(),&cli.PetApiFindPetsByStatusOpts{Status: optional.NewString(status), ApiKey: optional.NewString("amwlkdwaldm")})
-	if err==nil {
-		json.NewEncoder(w).Encode(pets)
-		// fmt.Fprintf(w,pets)
-		// fmt.Fprintf(w, "FindPetsByStatus Called\n")
-		// for _,pet := range pets{
+	StatusPets := []Pet{}
 
-		// 	fmt.Fprintf(w,"PetInfo:\n")
-		// 	fmt.Fprintf(w,"	ID :%v\n",pet.Id)
-		// 	fmt.Fprintf(w,"	Name :%v\n",pet.Name)
-		// 	if(pet.Category!=nil){
-		// 		fmt.Fprintf(w,"	Category : \n")
-		// 		fmt.Fprintf(w,"		ID:%v\n",pet.Category.Id)
-		// 		fmt.Fprintf(w,"		NAME:%v\n",pet.Category.Name)	
-		// 	}
-	
-		// 	fmt.Fprintf(w,"	Status :%v\n\n",pet.Status)	
-		// 	//log.Println(pet)
-		// }		
-
-		// fmt.Fprintf(w,"Response:\n")
-		// fmt.Fprintf(w,"	res(Method) :%v\n",res.Request.Method)
-		// fmt.Fprintf(w,"	res(Host) :%v\n",res.Request.Host)
-		// fmt.Fprintf(w,"	res(Status) :%v\n",res.Status)
-		// fmt.Fprintf(w,"	res(StatusCode) :%v\n",res.StatusCode)
-		// fmt.Fprintf(w,"	res(Proto) :%v\n",res.Proto)
-		// fmt.Fprintf(w,"	res(ContentLength) :%v\n\n\n",res.ContentLength)
-	} else{
-		log.Print(err)
+	for _,v := range pets{
+		if v.Status == status{
+			StatusPets = append(StatusPets, v)
+			//fmt.Fprintf(w,"Response:\n")
+		}
 	}
-	w.WriteHeader(http.StatusOK)
+
+	if len(StatusPets)!=0 {
+		data, _ := json.Marshal(StatusPets)
+		fmt.Fprint(w, string(data))	
+		w.WriteHeader(http.StatusOK)
+	} else{
+		w.WriteHeader(http.StatusBadRequest)
+	}
 }
 
 func FindPetsByTags(w http.ResponseWriter, r *http.Request) {
@@ -85,8 +116,29 @@ func FindPetsByTags(w http.ResponseWriter, r *http.Request) {
 
 func GetPetById(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	fmt.Fprintf(w, "Hello World! delete")
-	w.WriteHeader(http.StatusOK)
+	vars := mux.Vars(r) // HTTP요청의 url 경로에서 변수 추출에 사용
+	petId, err := strconv.Atoi(vars["petId"]) // 문자열과 기본 자료형간의 형변환 패키지
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(w, err)
+		return
+	}
+
+
+	pet,ok := pets[int64(petId)]
+	if !ok{
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	data, err := json.Marshal(pet)
+	if err==nil{
+		fmt.Fprint(w, string(data))
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+
+	w.WriteHeader(http.StatusBadRequest)	
 }
 
 func UpdatePet(w http.ResponseWriter, r *http.Request) {
@@ -103,3 +155,24 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 }
+
+func GetPetList(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	if len(pets)!=0 {
+		data, _ := json.Marshal(pets)
+		log.Print(string(data))
+		fmt.Fprint(w, string(data))	
+		w.WriteHeader(http.StatusOK)
+	} else{
+		// var idx int64 = 1
+		// log.Print(pets[idx])
+		// log.Print("3")
+		w.WriteHeader(http.StatusOK)
+	}
+}
+
+func ClearPet(w http.ResponseWriter, r *http.Request) {
+	pets = make(map[int64]Pet)
+	w.WriteHeader(http.StatusOK)
+}
+
