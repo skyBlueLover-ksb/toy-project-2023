@@ -31,7 +31,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 func usersHandler(w http.ResponseWriter, r *http.Request) {
 	if len(userMap) == 0 {
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprint(w, "No Users")
 		return
 	}
@@ -143,8 +143,12 @@ func NewHandler() http.Handler {
 	myMux.HandleFunc("/users", createUserHandler).Methods("POST")
 	myMux.HandleFunc("/users", updateUserHandler).Methods("PUT")
 
-	myMux.HandleFunc("/users/{id:[0-9]+}", getUserInfoHandler).Methods("GET")
-	myMux.HandleFunc("/users/{id:[0-9]+}", deleteUserHandler).Methods("DELETE")
+	myMux.
+		HandleFunc("/users/{id:[0-9]+}", getUserInfoHandler).
+		Methods("GET")
+	myMux.
+		HandleFunc("/users/{id:[0-9]+}", deleteUserHandler).
+		Methods("DELETE")
 
 	myMux.HandleFunc("/oauth/authorize", oauthHandler)
 	myMux.HandleFunc("/oauth2/authorize/callback", oauthCallBackHandler)

@@ -79,7 +79,6 @@ const requestURL = "http://127.0.0.1:3000"
 
 func main() {
 	for true {
-
 		userInput := ""
 		fmt.Println("C/R/U/D 중 하나를 입력하세요. 아니면 종료됩니다.")
 		fmt.Scanln(&userInput)
@@ -98,10 +97,10 @@ func main() {
 			}
 			id := resp2User(resp).ID
 			fmt.Printf("%d번 회원이 생성되었습니다.\n", id)
-
 		case "R":
 			option := ""
-			fmt.Println("모든 회원 정보를 읽으려면 A를, 아니면 조회하고자 하는 유저의 id를 입력하세요.")
+			fmt.Println("모든 회원 정보를 읽으려면 A를," +
+				" 아니면 조회하고자 하는 유저의 id를 입력하세요.")
 			fmt.Scanln(&option)
 			if option == "A" {
 				fmt.Println("전체 회원 조회.")
