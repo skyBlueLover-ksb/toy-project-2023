@@ -25,6 +25,8 @@ func Logger(inner http.Handler, name string) http.Handler {
                             // 설정한 경로로는 가지지만 아무런 비지니스 로직이 수행되지 않아 백지화면이 나옴
                             // http의 responsewriter와 request에는 요청과 응답에 대한 정보를 가지고 있으므로.. 
                             // 그냥 저렇게 가져다 사용할 수 있는 것으로 보임
+        
+        // inner의 servehttp는 결국 business logic을 실행하는 코드가 될것임
         log.Printf(
             "%s %s %s %s",
             r.Method,
