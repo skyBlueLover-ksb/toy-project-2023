@@ -1,4 +1,4 @@
-module testAPI
+module simpleAPI
 
 go 1.19
 
