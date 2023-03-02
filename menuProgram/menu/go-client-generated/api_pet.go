@@ -44,8 +44,7 @@ import (
 	 )
  
 	 // create path and map variables
-	 localVarPath := a.client.cfg.BasePath + "/pet"
- 
+	 localVarPath := a.client.cfg.BasePath + "/pet"	 
 	 localVarHeaderParams := make(map[string]string)
 	 localVarQueryParams := url.Values{}
 	 localVarFormParams := url.Values{}
@@ -84,7 +83,11 @@ import (
 	 if err != nil {
 		 return localVarReturnValue, localVarHttpResponse, err
 	 }
- 
+	//  log.Print(a.client.cfg.Host)
+	//  log.Print(a.client.cfg.BasePath)
+	//  log.Print(a.client.cfg.Scheme)
+	//  log.Print(a.client.cfg.UserAgent)
+
 	 if localVarHttpResponse.StatusCode < 300 {
 		 // If we succeed, return the data, otherwise pass on to decode error.
 		 err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));

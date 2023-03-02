@@ -5,6 +5,11 @@ import (
 	menu "bgg01578/menu/menu"
 	"fmt"
 )
+const (
+	PET = 1
+	STORE=2
+	USER=3
+)
 
 func main() {
 	client := cli.NewAPIClient(cli.NewConfiguration())
@@ -19,20 +24,20 @@ func main() {
 		fmt.Scanln(&choice)
 
 		
-	switch choice {
-		case 1:
-			menu.ClearScreen()
-			menu.PetMenu(client)
-		case 2:
-			menu.ClearScreen()
-			fmt.Println("Store Menu")
-		case 3:
-			menu.ClearScreen()
-			fmt.Println("User Menu")
-		default:
-			menu.ClearScreen()
-			fmt.Println("Invalid choice")
-	}
+		switch choice {
+			case PET:
+				menu.ClearScreen()
+				menu.PetMenu(client)
+			case STORE:
+				menu.ClearScreen()
+				fmt.Println("Store Menu")
+			case USER:
+				menu.ClearScreen()
+				fmt.Println("User Menu")
+			default:
+				menu.ClearScreen()
+				fmt.Println("Invalid choice")
+		}
 
 		fmt.Println("Press Enter to continue...")
 		fmt.Scanln()

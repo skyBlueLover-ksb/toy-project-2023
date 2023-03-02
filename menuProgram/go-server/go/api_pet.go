@@ -24,26 +24,25 @@ var pets map[int64]Pet
 func AddPet(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
-
 	data,err := ioutil.ReadAll(r.Body)
 	if(err!=nil){
 		log.Print(err.Error())
 		return
-	}
+	}//read err
 
 	var newpet Pet 
 	err = json.Unmarshal(data,&newpet)
 	if err!=nil {
 		log.Print(err.Error())
 		return
-	}
+	}//parsing err
 
-	if err!=nil || newpet.Id==0 || newpet.Category.Id==0 {
+	if newpet.Id==0 || newpet.Category.Id==0 {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprint(w, err)
 		//log.Print(err.Error())
 		return
-	}
+	}//input err
 
 	_,ok := pets[newpet.Id]
 	if ok {
@@ -85,8 +84,6 @@ func DeletePet(w http.ResponseWriter, r *http.Request) {
 }
 
 func FindPetsByStatus(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-
 	values := r.URL.Query()
 	status := values.Get("status")
 	//api_key := r.Header.Get("Api_key")
@@ -101,11 +98,12 @@ func FindPetsByStatus(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(StatusPets)!=0 {
-		data, _ := json.Marshal(StatusPets)
-		fmt.Fprint(w, string(data))	
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.WriteHeader(http.StatusOK)
+		data, _ := json.Marshal(StatusPets) //Serialize
+		fmt.Fprint(w, string(data))	
 	} else{
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusNotFound) // no data
 	}
 }
 
@@ -160,14 +158,10 @@ func GetPetList(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	if len(pets)!=0 {
 		data, _ := json.Marshal(pets)
-		log.Print(string(data))
 		fmt.Fprint(w, string(data))	
 		w.WriteHeader(http.StatusOK)
 	} else{
-		// var idx int64 = 1
-		// log.Print(pets[idx])
-		// log.Print("3")
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusBadRequest)
 	}
 }
 

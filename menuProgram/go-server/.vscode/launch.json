@@ -9,7 +9,7 @@
       "type": "go",
       "mode": "debug",
       "request": "launch",
-      "program": "C:\\Users\\10154560\\Desktop\\세미나\\0221\\go-server\\main.go"
+      "program": "C:\\Users\\10154560\\Desktop\\세미나\\0228\\go-server\\main.go"
     }
   ]
 }

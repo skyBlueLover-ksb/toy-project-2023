@@ -186,21 +186,6 @@ func NewRouter() *mux.Router {
 	for _, route := range routes {				
 		handler := Logger(route.HandlerFunc, route.Name)
 		
-		
-
-
-		
-		// strict slash는 뒤의 / 를 떼어낸 형태로 redirect 해주는 역할 - 브라우저에서는 이게 잘 안보이니 썬더클라이언트로 해보자
-		// handler = route.HandlerFunc 이거 없애고 밑에서 축약해서 써도 상관 없지
-		// logger에 handler 객체와 router name 넘겨주기
-
-
-
-		//Logger는 handler 객체와 router name을 받는 녀석이지
-		//handlerfunc는 일반func를 handler 객체로 변환해주는 고마운.. 녀석
-		//Logger의 역할은 쉽게 말해 기존의 핸들러 (여기서는 route.HandlerFunc) 에 로그 찍는 기능을 추가해서 넘기는 역할
-		//그럼 로그 빼고 테스트를 한번 해볼까 - 된다. Handler 안에 route.HandlerFunc 그대로 넘기면 로그 없이 비지니스 로직 수행함
-					
 		router.
 			Methods(route.Method).
 			Path(route.Pattern).

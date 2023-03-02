@@ -107,7 +107,7 @@ func FindPetByStatus(client *cli.APIClient, status string, apikey string ){
 	idx := 1
 	if err==nil {
 		for _,pet := range pets{
-			log.Print("<Pet(",idx, ")>\n")
+			log.Print("<Pet(",idx, ")>")
 			idx++
 			log.Print("Id :",pet.Id)
 			log.Print("Name :", pet.Name)		
@@ -155,9 +155,6 @@ func AddPet(client *cli.APIClient, body cli.Pet){
 func DeletePet(client *cli.APIClient, petId int64, apikey string){
 	res, err  := client.PetApi.DeletePet(context.Background(),petId,&cli.PetApiDeletePetOpts{ApiKey:optional.NewString(apikey)})
 
-
-	//data,err2 := ioutil.ReadAll(res.Body)
-	//log.Println(string(res.Body))
 	if err==nil { //삭제 성공
 		log.Println("Response Status:",res.Status)
 	}else{ //삭제 실패
@@ -172,23 +169,17 @@ func GetPetList(client *cli.APIClient){
 		return
 	}
 
-	// if len(pets)==0 {
-	// 	log.Print("Empty")
-	// 	return
-	// }
-
-	idx := 1
+	idx := 0
 	if err==nil {
 		for _,pet := range pets{
-			log.Print("<Pet(",idx, ")>\n")
 			idx++
-
+			log.Print("<Pet(",idx, ")>")
 			log.Print("Id :",pet.Id)
 			log.Print("Name :", pet.Name)		
 			log.Print("Status :", pet.Status,"\n\n")
 		}
-		log.Print(res.Status,"\n")
-		log.Print(res.Proto,"\n\n")
+		log.Println(res.Status)
+		log.Println(res.Proto)
 	}else{
 		log.Print(err.Error())
 	}
@@ -202,7 +193,7 @@ func ClearPet(client *cli.APIClient){
 		log.Print(res.Status)
 		log.Print(res.Proto,"\n\n")
 	} else {
-		log.Print("<Failed>")
+		log.Print("<Fail>")
 		log.Print(err.Error())
 	}	
 }
