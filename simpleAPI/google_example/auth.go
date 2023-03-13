@@ -13,8 +13,9 @@ type User struct {
 }
 
 const (
-	myGoogleClientID     = "206115972812-mm4hv7h8vaareea0kte844925pgbun90.apps.googleusercontent.com"
-	myGoogleClientSecret = "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"
+	myGoogleClientID = "206115972812-mm4hv7h8vaareea0kte844925pgbun90.apps.googleusercontent.com"
+	//myGoogleClientSecret = "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"
+	myGoogleClientSecret = "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"
 )
 
 const (
