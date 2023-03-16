@@ -137,6 +137,7 @@ func NewHandler() http.Handler {
 
 	myMux := mux.NewRouter().StrictSlash(true)
 	myMux.Use(Logger)
+	myMux.Use(ValidateToken)
 
 	myMux.HandleFunc("/", indexHandler)
 	myMux.HandleFunc("/users", usersHandler).Methods("GET")

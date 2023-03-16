@@ -12,10 +12,12 @@ import (
 )
 
 var store = sessions.NewCookieStore([]byte("secret"))
+var globalToken *oauth2.Token
 
 const (
-	baseURL  = "127.0.0.1"
-	basePORT = "3030"
+	baseURL    = "127.0.0.1"
+	basePORT   = "3030"
+	myAPIGWURL = "http://127.0.0.1:3000"
 )
 
 type myUser struct {
@@ -24,7 +26,7 @@ type myUser struct {
 }
 
 func main() {
-	r := mux.NewRouter()
+	r := mux.NewRouter().StrictSlash(true)
 	r.HandleFunc("/", RenderMainViewHandler)
 	r.HandleFunc("/auth", RenderAuthViewHandler)
 	r.HandleFunc("/auth/callback", AuthenticateHandler)
@@ -80,6 +82,7 @@ func AuthenticateHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := oauth2.NoContext
 
 	token, err := OAuthConfig.Exchange(ctx, r.FormValue("code"))
+	globalToken = token
 	fmt.Println("token:", token)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -109,6 +112,32 @@ func AuthenticateHandler(w http.ResponseWriter, r *http.Request) {
 	//}
 	//var authUser User
 	//json.Unmarshal(userInfo, &authUser)
+	//
+	//session.Options = &sessions.Options{
+	//	Path:   "/",
+	//	MaxAge: 86400,
+	//}
+	//session.Values["user"] = authUser.Email
+	//session.Values["username"] = authUser.Name
+	//session.Save(r, w)
+	//
+	//http.Redirect(w, r, "/view", http.StatusFound)
+
+	//client := OAuthConfig.Client(oauth2.NoContext, token)
+	////client := OAuthConfig.Client(context.TODO(), token)
+	//resp, err := client.Get(myAPIGWURL)
+	//if err != nil {
+	//	http.Error(w, err.Error(), http.StatusBadRequest)
+	//	return
+	//}
+	//defer resp.Body.Close()
+	//respInfo, err := io.ReadAll(resp.Body)
+	//if err != nil {
+	//	http.Error(w, err.Error(), http.StatusBadRequest)
+	//	return
+	//}
+	//var authUser User
+	//json.Unmarshal(respInfo, &authUser)
 	//
 	//session.Options = &sessions.Options{
 	//	Path:   "/",
