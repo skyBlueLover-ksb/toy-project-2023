@@ -46,20 +46,20 @@ var routes = Routes{
 	Route{
 		"endpoint for test",
 		strings.ToUpper("Get"),
-		"/servertest1", // http://localhost:8080/test1
+		"/servertest1",
 		Test1,
 	},
 
 	Route{
 		"endpoint for test",
-		strings.ToUpper("Get"), // http://localhost:8080/test2
+		strings.ToUpper("Get"),
 		"/servertest2",
 		Test2,
 	},
 
 	Route{
 		"endpoint for test",
-		strings.ToUpper("Get"), // http://localhost:8080/test2
+		strings.ToUpper("Get"),
 		"/testrequest/{value}",
 		TestRequest,
 	},
