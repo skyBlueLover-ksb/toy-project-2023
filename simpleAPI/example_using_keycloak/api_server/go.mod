@@ -7,6 +7,7 @@ require (
 	github.com/gorilla/sessions v1.2.1
 	github.com/stretchr/testify v1.8.1
 	golang.org/x/oauth2 v0.5.0
+	github.com/Nerzal/gocloak/v8 v8.6.0
 )
 
 require (

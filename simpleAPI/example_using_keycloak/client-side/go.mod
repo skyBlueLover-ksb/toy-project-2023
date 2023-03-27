@@ -1,6 +1,6 @@
 module client-side
 
-go 1.20
+go 1.19
 
 require (
 	github.com/Nerzal/gocloak/v8 v8.6.0
